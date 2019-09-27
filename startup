@@ -1,8 +1,9 @@
-# /usr/bin/env bash
+#!/usr/bin/env bash
 
 cp /etc/squid/squid.conf /etc/squid/squid.conf~
 
 IP=$(wget -4qO- "http://whatismyip.akamai.com/")
+DOCKER_IP=$(ip route show | awk '/default/ {print $3}')
 
 cat > /etc/squid/squid.conf <<END
 http_port $PROXY_PORT
@@ -21,7 +22,9 @@ acl Safe_ports port 591
 acl Safe_ports port 777
 acl CONNECT method CONNECT
 acl REMOTE_SELF dst $IP-$IP/255.255.255.255
+acl DOCKER_IP dst $DOCKER_IP-$DOCKER_IP/255.255.255.255
 http_access allow REMOTE_SELF
+http_access allow DOCKER_IP
 http_access allow localhost
 http_access deny all
 refresh_pattern ^ftp:           1440    20%     10080
@@ -31,6 +34,6 @@ refresh_pattern .               0       20%     4320
 END
 
 echo "Proxy IP: $IP"
+echo "Docker IP: $DOCKER_IP"
 
 squid -f /etc/squid/squid.conf -NC
-
