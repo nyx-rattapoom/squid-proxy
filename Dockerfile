@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 ENV PROXY_PORT 8080
 
 RUN apt update && apt install -y --no-install-recommends \
-    wget squid && \
+    wget squid iproute2 && \
     rm -rf /var/lib/apt/lists/*
 
 ADD startup /squid/startup
