@@ -21,8 +21,8 @@ acl Safe_ports port 488
 acl Safe_ports port 591
 acl Safe_ports port 777
 acl CONNECT method CONNECT
-acl REMOTE_SELF dst $IP-$IP/255.255.255.255
-acl DOCKER_IP dst $DOCKER_IP-$DOCKER_IP/255.255.255.255
+acl REMOTE_SELF dst $IP/32
+acl DOCKER_IP dst $DOCKER_IP/32
 http_access allow REMOTE_SELF
 http_access allow DOCKER_IP
 http_access allow localhost
